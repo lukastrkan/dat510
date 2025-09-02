@@ -1,7 +1,4 @@
 class CaeserCipher:
-    lower = "abcdefghijklmnopqrstuvwxyz"
-    upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
     def __init__(self, key):
         self.key = key
 
@@ -18,13 +15,17 @@ class CaeserCipher:
         return result
 
     def shift_char(self, c, key):
-        chars = self.upper if c.isupper() else self.lower
+        char_code = ord(c)
 
-        # do not encrypt non-alphabetic characters
-        if c not in chars:
+        if char_code < 32 or char_code > 126:
             return c
 
-        index = chars.index(c)
-        new_index = (index + key) % len(chars)
-
-        return chars[new_index]
+        # shift to 0-94 range so we can use modulo
+        new_code = char_code - 32
+        # apply the shift
+        new_code += key
+        #ensure correct range
+        new_code = new_code % 95
+        # shift back to ascii range
+        new_code += 32
+        return chr(new_code)
